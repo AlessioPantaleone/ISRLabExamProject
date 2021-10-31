@@ -7,8 +7,8 @@ from typing import Dict, List
 class Body:
 
     def __init__(self):
-        self._sensors = []
-        self._actuators = []
+        self._sensors = ...  # TODO  sensors list
+        self._actuators = ...  # TODO actuators list
 
     def get_perceptions(self) -> Dict:
         """
@@ -31,7 +31,7 @@ class Body:
         :param sensor : key or index of the sensor
         :param data : calibration data
         """
-        ...  # Calibrate sensor
+        ...  # TODO Calibrate sensor
 
     def calibrate(self, actuator, data):
         """
@@ -39,4 +39,4 @@ class Body:
         :param actuator : key or index of the actuator
         :param data : calibration data
         """
-        ...  # Calibrate actuator
+        ...  # TODO Calibrate actuator

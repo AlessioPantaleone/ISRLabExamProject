@@ -4,8 +4,7 @@ Test main
 
 
 def main():
-    print("Hello World!")
-    print("Hello world but from another pc")
+    print("Hello Luca And Gabriella")
 
 
 if __name__ == "__main__":
