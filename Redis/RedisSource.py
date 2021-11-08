@@ -1,10 +1,4 @@
-"""
-    Redis Explorer will
-    Reads from a REDIS server the full set of keys, query for each key its type
-    and makes a copy in the Python memory space
-"""
 import time
-
 import redis
 
 REDIS_HOST = "localhost"
