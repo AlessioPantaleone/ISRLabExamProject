@@ -1,10 +1,8 @@
-"""
-Test main
-"""
+import redis;
 
 
 def main():
-    print("Hello Luca And Gabriella")
+    print("Hello world i'm a useless main file")
 
 
 if __name__ == "__main__":
