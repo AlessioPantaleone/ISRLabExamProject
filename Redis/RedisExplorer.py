@@ -43,7 +43,7 @@ if __name__ == '__main__':
         print("My REDIS server version is: ", R.info()['redis_version'])
         database = redis_explorer(R)
         for key in database:
-            print(key, type(key), database[key])
+            print((key, type(key), database[key]))
     except Exception as e:
         print("The REDIS server is not available")
         print(e)

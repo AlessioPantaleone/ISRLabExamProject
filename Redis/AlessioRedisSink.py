@@ -8,7 +8,7 @@ if __name__ == '__main__':
     R = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
     try:
         while 1:
-            data = R.lpop("TOPIC1")
+            data = R.lrange("ExerciseList1", -1, -1)
             print(data)
             time.sleep(5)
     except Exception as e:
