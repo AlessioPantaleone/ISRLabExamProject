@@ -1,4 +1,5 @@
 import time
+
 import redis
 
 REDIS_HOST = "localhost"
