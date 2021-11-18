@@ -21,11 +21,17 @@ if __name__ == "__main__":
     color_sensor = ColorSensor(Port.S1)
     distance_sensor = UltrasonicSensor(Port.S2)
     while True:
+        time.sleep(5)
+        print(time.time())
+        print("Sensed Color: ")
+        print(color_sensor.color())
+        print("Sensed Distance: ")
+        print(distance_sensor.distance())
+        print("////////////////////")
+
         if color_sensor.color() == Color.RED and distance_sensor.distance() < 100:
             ev3.speaker.say("Rosso vicino")
-            time.sleep(5)
             # little horn noise
         if color_sensor.color() == Color.GREEN and distance_sensor.distance() >= 100:
             ev3.speaker.say("Verde Lontano")
-            time.sleep(5)
             # big horn noise
