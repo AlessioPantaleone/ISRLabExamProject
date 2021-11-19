@@ -1,13 +1,18 @@
 import redis
 
 
+def send_data(R: redis.Redis, topic: str, my_key, value):
+    R.set(my_key, value)
+    R.publish(topic, my_key)
+
+
 class Controller:
     my_state = None
     color_detected = None
     distance_detected = None
 
     def __init__(self):
-        self.my_state = "Running"
+        self.my_state = "Stopped"
         self.color_detected = "NONE"
         self.distance_detected = 0
 
@@ -24,23 +29,15 @@ class Controller:
                     self.distance_detected = value
                 self.act()
 
-    def send_data(self, R: redis.Redis, topic: str, my_key, value):
-        R.set(my_key, value)
-        R.publish(topic, my_key)
-
     def act(self):
         if self.my_state == "Stopped":
-            if self.color_detected == "GREEN" and self.distance_detected > 100:
+            if self.color_detected == "GREEN" and int(self.distance_detected) > 100:
                 self.my_state = "Running"
-                self.send_data(R, "commands", "Motor_Status", "Ahead")
+                send_data(R, "commands", "Motor_Status", "Ahead")
         if self.my_state == "Running":
-            if self.color_detected == "RED" or self.distance_detected < 100:
+            if self.color_detected == "RED" or int(self.distance_detected) < 100:
                 self.my_state = "Stopped"
-                self.send_data(R, "commands", "Motor_Status", "Stop")
-        print(self.color_detected)
-        print(self.distance_detected)
-        print(self.my_state)
-
+                send_data(R, "commands", "Motor_Status", "Stop")
 
 if __name__ == '__main__':
     REDIS_HOST = "localhost"
