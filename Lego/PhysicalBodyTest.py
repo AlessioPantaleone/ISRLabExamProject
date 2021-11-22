@@ -45,11 +45,23 @@ if __name__ == "__main__":
     REDIS_HOST = "localhost"
     REDIS_PORT = 6379
     R = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
+    print("My REDIS server version is: ", R.info()['redis_version'])
     B = PhysicalBody(Port.S1, Port.S2, Port.A, Port.B)
     pubsub = R.pubsub(ignore_subscribe_messages=True)
     pubsub.subscribe("commands")
 
     while True:
+        msg = pubsub.get_message()
+        if msg:
+            instruction = R.get(msg["data"])
+        else:
+            instruction = None
+
+        if instruction == "Ahead":
+            B.go_forward()
+        if instruction == "Stop":
+            B.stop()
+
         random = randint(1, 4)
         if random == 1:
             send_data(R, "sensors", "color_sensor", "GREEN")
@@ -63,16 +75,5 @@ if __name__ == "__main__":
         if random == 4:
             send_data(R, "sensors", "color_sensor", "RED")
             send_data(R, "sensors", "distance_sensor", "50")
+        sleep(1)
 
-        msg = pubsub.get_message()
-        if msg:
-            instruction = R.get(msg["data"])
-        else:
-            instruction = None
-
-        if instruction == "Ahead":
-            B.go_forward()
-        if instruction == "Stop":
-            B.stop()
-
-        sleep(2)

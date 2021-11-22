@@ -25,9 +25,13 @@ class Controller:
                 value = R.get(source_name)
                 if source_name == "color_sensor":
                     self.color_detected = value
+                    if value != self.color_detected:
+                        self.color_detected = value
+                        self.act()
                 if source_name == "distance_sensor":
-                    self.distance_detected = value
-                self.act()
+                    if value != self.distance_detected:
+                        self.distance_detected = value
+                        self.act()
 
     def act(self):
         if self.my_state == "Stopped":
@@ -40,7 +44,6 @@ class Controller:
                 print("Acting to stop!")
                 self.my_state = "Stopped"
                 send_data(R, "commands", "Motor_Status", "Stop")
-
 
 if __name__ == '__main__':
     REDIS_HOST = "localhost"
