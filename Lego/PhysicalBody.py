@@ -2,6 +2,21 @@ from pybricks.hubs import EV3Brick
 from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor, InfraredSensor, UltrasonicSensor, GyroSensor)
 from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch, DataLog
+import redis
+from time import sleep
+
+def send_data(R: redis.Redis, topic: str, my_key, value):
+    R.set(my_key, value)
+    R.publish(topic, my_key)
+
+
+def read_data(R: redis.Redis, topic: str):
+    pubsub = R.pubsub()
+    pubsub.subscribe(topic)
+    for msg in pubsub.get_message():
+        if msg["type"] == 'message':
+            source_name = msg["data"]
+            return R.get(source_name)
 
 
 class PhysicalBody:
@@ -34,4 +49,18 @@ class PhysicalBody:
 
 
 if __name__ == "__main__":
-    print("Misura, invia qualcosa al controller e ricevi qualcosa dal controllerr")
+    REDIS_HOST = "localhost"
+    REDIS_PORT = 6379
+    R = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
+    B = PhysicalBody(Port.S1, Port.S2, Port.A, Port.B)
+    while True:
+        send_data(R, "sensors", "color_sensor", B.get_color())
+        send_data(R, "sensors", "distance_sensor", B.get_distance())
+
+        instruction = read_data(R, "commands")
+        if instruction == "Ahead":
+            B.go_forward()
+        if instruction == "Stop":
+            B.stop()
+
+        sleep(1)
