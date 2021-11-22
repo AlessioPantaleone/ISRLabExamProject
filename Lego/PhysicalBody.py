@@ -21,7 +21,7 @@ class PhysicalBody:
         return self.distance_sensor.distance()
 
     def get_color(self):
-        return self.color_sensor.Color()
+        return self.color_sensor.color()
 
     def go_forward(self):
         self.motor.dc(15)
@@ -34,4 +34,4 @@ class PhysicalBody:
 
 
 if __name__ == "__main__":
-    print("Misura, invia qualcosa al controller e ricevi qualcosa dal controller")
+    print("Misura, invia qualcosa al controller e ricevi qualcosa dal controllerr")
