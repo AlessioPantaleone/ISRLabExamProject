@@ -1,3 +1,6 @@
+import logging
+import time
+
 from pybricks.hubs import EV3Brick
 from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor, InfraredSensor, UltrasonicSensor, GyroSensor)
 from pybricks.parameters import Port, Stop, Direction, Button, Color
@@ -50,27 +53,43 @@ class PhysicalBody:
 
 
 if __name__ == "__main__":
+    logging.basicConfig(filename='controller_logging.txt',
+                        level=logging.DEBUG,
+                        format='%(levelname)s %(asctime)s %(message)s',
+                        datefmt='%m/%d/%Y %I:%M:%S %p')
+    logging.info("This is the logging for the lego body")
     REDIS_HOST = "localhost"
     REDIS_PORT = 6379
-    R = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
-    print("My REDIS server version is: ", R.info()['redis_version'])
-    B = PhysicalBody(Port.S1, Port.S2, Port.A, Port.B)
-    pubsub = R.pubsub(ignore_subscribe_messages=True)
-    pubsub.subscribe("commands")
 
-    while True:
-        msg = pubsub.get_message()
-        if msg:
-            instruction = R.get(msg["data"])
-        else:
-            instruction = None
+    try:
+        R = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
+        logging.info("connected to redis server")
+        B = PhysicalBody(Port.S1, Port.S2, Port.A, Port.B)
+        pubsub = R.pubsub(ignore_subscribe_messages=True)
+        pubsub.subscribe("commands")
 
-        if instruction == "Ahead":
-            B.go_forward()
-        if instruction == "Stop":
-            B.stop()
+        while True:
+            msg = pubsub.get_message()
+            if msg:
+                instruction = R.get(msg["data"])
+                logging.info(f"Reading Data... Got {instruction}")
+            else:
+                instruction = None
 
-        send_data(R, "sensors", "color_sensor", B.get_color())
-        send_data(R, "sensors", "distance_sensor", B.get_distance())
+            if instruction == "Ahead":
+                B.go_forward()
+                logging.info("Brick Going Forward")
+            if instruction == "Stop":
+                B.stop()
+                logging.info("Brick Motors Stopping")
 
-        sleep(1)
+            logging.info(f"Sending sensors data to Redis: {B.get_color()},{B.get_distance()}")
+            send_data(R, "sensors", "color_sensor", B.get_color())
+            send_data(R, "sensors", "distance_sensor", B.get_distance())
+
+            sleep(1)
+
+    except Exception as e:
+        logging.critical("The REDIS server is not available, trying again soon")
+        print(e)
+        time.sleep(3)

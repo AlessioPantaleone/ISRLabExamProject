@@ -52,8 +52,12 @@ class Controller:
                 self.my_state = "Stopped"
                 send_data(R, "commands", "Motor_Status", "Stop")
 
+
 if __name__ == '__main__':
-    logging.basicConfig(filename='controllerlogging.txt', level=logging.DEBUG, format='%(levelname)s %(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+    logging.basicConfig(filename='controller_logging.txt',
+                        level=logging.DEBUG,
+                        format='%(levelname)s %(asctime)s %(message)s',
+                        datefmt='%m/%d/%Y %I:%M:%S %p')
     logging.info("This is the logging for the lego controller")
     REDIS_HOST = "localhost"
     REDIS_PORT = 6379
