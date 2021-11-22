@@ -5,6 +5,7 @@ from pybricks.tools import wait, StopWatch, DataLog
 import redis
 from time import sleep
 
+
 def send_data(R: redis.Redis, topic: str, my_key, value):
     R.set(my_key, value)
     R.publish(topic, my_key)
@@ -52,19 +53,15 @@ if __name__ == "__main__":
     REDIS_HOST = "localhost"
     REDIS_PORT = 6379
     R = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
+    print("My REDIS server version is: ", R.info()['redis_version'])
     B = PhysicalBody(Port.S1, Port.S2, Port.A, Port.B)
     pubsub = R.pubsub(ignore_subscribe_messages=True)
     pubsub.subscribe("commands")
 
     while True:
-        send_data(R, "sensors", "color_sensor", B.get_color())
-        send_data(R, "sensors", "distance_sensor", B.get_distance())
-        print("instruction sent")
-
         msg = pubsub.get_message()
-        print(msg)
         if msg:
-            instruction = msg["data"]
+            instruction = R.get(msg["data"])
         else:
             instruction = None
 
@@ -73,4 +70,7 @@ if __name__ == "__main__":
         if instruction == "Stop":
             B.stop()
 
-        sleep(2)
+            send_data(R, "sensors", "color_sensor", B.get_color())
+            send_data(R, "sensors", "distance_sensor", B.get_distance())
+
+        sleep(1)
