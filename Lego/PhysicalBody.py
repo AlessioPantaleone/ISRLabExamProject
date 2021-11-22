@@ -70,7 +70,7 @@ if __name__ == "__main__":
         if instruction == "Stop":
             B.stop()
 
-            send_data(R, "sensors", "color_sensor", B.get_color())
-            send_data(R, "sensors", "distance_sensor", B.get_distance())
+        send_data(R, "sensors", "color_sensor", B.get_color())
+        send_data(R, "sensors", "distance_sensor", B.get_distance())
 
         sleep(1)
