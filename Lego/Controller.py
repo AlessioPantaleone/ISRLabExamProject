@@ -20,6 +20,7 @@ class Controller:
         pubsub = R.pubsub()
         pubsub.subscribe(topic)
         for msg in pubsub.listen():
+            print(msg)
             if msg["type"] == 'message':
                 source_name = msg["data"]
                 value = R.get(source_name)
@@ -38,6 +39,7 @@ class Controller:
             if self.color_detected == "RED" or int(self.distance_detected) < 100:
                 self.my_state = "Stopped"
                 send_data(R, "commands", "Motor_Status", "Stop")
+
 
 if __name__ == '__main__':
     REDIS_HOST = "localhost"
