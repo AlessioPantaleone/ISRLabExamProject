@@ -20,7 +20,7 @@ class PhysicalBody:
     def goForward(self):
         self.motor.dc(15)
     def stop(self):
-        self.motor.dc(10)
+        self.motor.dc(0)
     def goBackward(self):
         self.motor.dc(-15)
 if __name__ == "__main__":
