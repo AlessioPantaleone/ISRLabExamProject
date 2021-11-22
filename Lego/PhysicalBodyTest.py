@@ -1,3 +1,6 @@
+import random
+from  random import randint
+
 from pybricks.hubs import EV3Brick
 from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch, DataLog
@@ -47,14 +50,23 @@ if __name__ == "__main__":
     pubsub.subscribe("commands")
 
     while True:
-        send_data(R, "sensors", "color_sensor", B.get_color())
-        send_data(R, "sensors", "distance_sensor", B.get_distance())
-        print("instruction sent")
+        random = randint(1, 4)
+        if random == 1:
+            send_data(R, "sensors", "color_sensor", "GREEN")
+            send_data(R, "sensors", "distance_sensor", "150")
+        if random == 2:
+            send_data(R, "sensors", "color_sensor", "GREEN")
+            send_data(R, "sensors", "distance_sensor", "50")
+        if random == 3:
+            send_data(R, "sensors", "color_sensor", "RED")
+            send_data(R, "sensors", "distance_sensor", "150")
+        if random == 4:
+            send_data(R, "sensors", "color_sensor", "RED")
+            send_data(R, "sensors", "distance_sensor", "50")
 
         msg = pubsub.get_message()
-        print(msg)
         if msg:
-            instruction = msg["data"]
+            instruction = R.get(msg["data"])
         else:
             instruction = None
 

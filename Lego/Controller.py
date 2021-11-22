@@ -20,7 +20,6 @@ class Controller:
         pubsub = R.pubsub()
         pubsub.subscribe(topic)
         for msg in pubsub.listen():
-            print(msg)
             if msg["type"] == 'message':
                 source_name = msg["data"]
                 value = R.get(source_name)
@@ -33,10 +32,12 @@ class Controller:
     def act(self):
         if self.my_state == "Stopped":
             if self.color_detected == "GREEN" and int(self.distance_detected) > 100:
+                print("Acting to start!")
                 self.my_state = "Running"
                 send_data(R, "commands", "Motor_Status", "Ahead")
         if self.my_state == "Running":
             if self.color_detected == "RED" or int(self.distance_detected) < 100:
+                print("Acting to stop!")
                 self.my_state = "Stopped"
                 send_data(R, "commands", "Motor_Status", "Stop")
 
