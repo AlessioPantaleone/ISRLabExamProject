@@ -1,10 +1,10 @@
+
 import logging
 import time
+from ev3dev2.motor import OUTPUT_A, OUTPUT_D,Motor
+from ev3dev2.sensor import INPUT_1,INPUT_4
+from ev3dev2.sensor.lego import ColorSensor,UltrasonicSensor
 
-from pybricks.hubs import EV3Brick
-from pybricks.ev3devices import (Motor, TouchSensor, ColorSensor, InfraredSensor, UltrasonicSensor, GyroSensor)
-from pybricks.parameters import Port, Stop, Direction, Button, Color
-from pybricks.tools import wait, StopWatch, DataLog
 import redis
 from time import sleep
 
@@ -28,7 +28,7 @@ class PhysicalBody:
     distance_sensor = None
     motorL = None
     motorR = None
-    ev3 = EV3Brick()
+    #ev3 = EV3Brick()
 
     def __init__(self, Color_Port, Distance_Port, MotorL_Port, MotorR_Port):
         self.color_sensor = ColorSensor(Color_Port)
@@ -64,7 +64,7 @@ if __name__ == "__main__":
     try:
         R = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
         logging.info("connected to redis server")
-        B = PhysicalBody(Port.S1, Port.S2, Port.A, Port.B)
+        B = PhysicalBody(INPUT_1, INPUT_4, OUTPUT_A, OUTPUT_D)
         pubsub = R.pubsub(ignore_subscribe_messages=True)
         pubsub.subscribe("commands")
 
