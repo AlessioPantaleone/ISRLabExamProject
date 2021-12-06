@@ -5,18 +5,10 @@ import time
 import redis
 from time import sleep
 
-import Utilities.RedisHelper as RH
-import Utilities.LoggerHelper as LH
-
 from MyRobot import MyRobot
 
 MAX_SPEED = 1500
 
-
-def send_data(R: redis.Redis, topic: str, my_key, value):
-    logging.info(f"Sending data to redis Topic: {topic} , Key:{my_key}, Value:{value}")
-    R.set(my_key, value)
-    R.publish(topic, my_key)
 
 class PhysicalBody:
     Robot = None
@@ -42,14 +34,11 @@ class PhysicalBody:
 
 
 if __name__ == "__main__":
-    Logger = LH.get_complete_logger("Freenove.txt")
-    Logger.info("This is the logging for the lego body")
     REDIS_HOST = "127.0.0.1"  # TODO
     REDIS_PORT = 6379
 
     try:
         R = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
-        Logger.info("connected to redis server")
         B = PhysicalBody()
         pubsub = R.pubsub(ignore_subscribe_messages=True)
         pubsub.subscribe("commands")
@@ -58,26 +47,21 @@ if __name__ == "__main__":
             msg = pubsub.get_message()
             if msg:
                 instruction = R.get(msg["data"])
-                Logger.info(f"Reading Data... Got {instruction}")
             else:
                 instruction = None
 
             if instruction == "Ahead":
                 B.go_forward()
-                Logger.info("Brick Going Forward")
             if instruction == "Stop":
                 B.stop()
-                Logger.info("Brick Motors Stopping")
             if instruction == "Backward":
                 B.go_backward()
                 logging.info("Brick Going Back")
 
-            Logger.info(f"Sending sensors data to Redis: {B.get_distance()}")
-            send_data(R, "sensors", "distance_sensor", B.get_distance())
+            RH.send_data(R, "sensors", "distance_sensor", B.get_distance())
 
             sleep(1)
 
     except Exception as e:
-        Logger.critical("The REDIS server is not available, trying again soon")
         print(e)
         time.sleep(3)
