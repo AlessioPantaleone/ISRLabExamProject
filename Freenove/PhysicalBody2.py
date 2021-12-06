@@ -9,6 +9,11 @@ from MyRobot import MyRobot
 
 MAX_SPEED = 1500
 
+def send_data(R: redis.Redis, topic: str, my_key, value):
+    logging.info(f"Sending data to redis Topic: {topic} , Key:{my_key}, Value:{value}")
+    R.set(my_key, value)
+    R.publish(topic, my_key)
+
 
 class PhysicalBody:
     Robot = None
@@ -58,7 +63,7 @@ if __name__ == "__main__":
                 B.go_backward()
                 logging.info("Brick Going Back")
 
-            RH.send_data(R, "sensors", "distance_sensor", B.get_distance())
+            send_data(R, "sensors", "distance_sensor", B.get_distance())
 
             sleep(1)
 
