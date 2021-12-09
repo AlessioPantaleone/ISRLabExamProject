@@ -9,6 +9,7 @@ from MyRobot import MyRobot
 
 MAX_SPEED = 1500
 
+
 def send_data(R: redis.Redis, topic: str, my_key, value):
     logging.info(f"Sending data to redis Topic: {topic} , Key:{my_key}, Value:{value}")
     R.set(my_key, value)
@@ -22,20 +23,20 @@ class PhysicalBody:
         self.Robot = MyRobot()
 
     def get_distance(self):
-        reader = self.Robot.stato_sensori()
+        reader = self.Robot.stato_sensori()  # TODO Adapt Robot symbols
         data = []
         for row in reader:
             data.append(re.findall(r'\d+', str(row))[4])
         return data[0]
 
     def go_forward(self):
-        self.Robot.avanti(MAX_SPEED)
+        self.Robot.avanti(MAX_SPEED)  # TODO Adapt Robot symbols
 
     def stop(self):
-        self.Robot.stop_motori()
+        self.Robot.stop_motori()  # TODO Adapt Robot symbols
 
     def go_backward(self):
-        self.Robot.avanti(-MAX_SPEED)
+        self.Robot.avanti(-MAX_SPEED)  # TODO Adapt Robot symbols
 
 
 if __name__ == "__main__":
