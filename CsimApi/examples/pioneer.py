@@ -1,4 +1,4 @@
-from pycsim import CSim, common
+from CsimApi.pycsim import CSim, common
 import time
 
 
@@ -47,7 +47,7 @@ if __name__ == "__main__":
         while True:
             rl = r.right_length()
             ll = r.left_length()
-            if 0.01 < rl  < 10:
+            if 0.01 < rl < 10:
                 r.rotate_left()
             elif 0.01 < ll < 10:
                 r.rotate_right()

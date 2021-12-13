@@ -13,7 +13,6 @@ class PioneerP3DX:
         self._right_sensor = api.sensor.proximity("Pioneer_p3dx_ultrasonicSensor6")
         self._debug_shape = api.shape.primitive("debug")
 
-'''
     def rotate_right(self, speed=2.0):
         self._set_two_motor(speed, -speed)
 
@@ -35,7 +34,6 @@ class PioneerP3DX:
 
     def left_length(self):
         return self._left_sensor.read()[1].distance()
-'''
 
 if __name__ == "__main__":
     with CSim.connect("127.0.0.1", 19997) as api:
