@@ -12,16 +12,16 @@ class PioneerP3DX:
         self._right_sensor = api.sensor.proximity("Pioneer_p3dx_ultrasonicSensor6")
         self._debug_shape = api.shape.primitive("debug")
 
-    def rotate_right(self, speed=2.0):
+    def rotate_right(self, speed=0.5):
         self._set_two_motor(speed, -speed)
 
-    def rotate_left(self, speed=2.0):
+    def rotate_left(self, speed=0.5):
         self._set_two_motor(-speed, speed)
 
-    def move_forward(self, speed=2.0):
+    def move_forward(self, speed=0.5):
         self._set_two_motor(speed, speed)
 
-    def move_backward(self, speed=2.0):
+    def move_backward(self, speed=0.5):
         self._set_two_motor(-speed, -speed)
 
     def _set_two_motor(self, left: float, right: float):
