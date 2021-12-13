@@ -42,12 +42,16 @@ class Controller:
 
     def act(self):
         if self.my_state == "Stopped":
-            if self.color_detected == "GREEN" and int(self.distance_detected) > 100:
+            if self.color_detected == "Green" and int(self.distance_detected) > 100:
                 logging.info("Taking action to start motors")
                 self.my_state = "Running"
                 send_data(R, "commands", "Motor_Status", "Ahead")
-        if self.my_state == "Running":
-            if self.color_detected == "RED" or int(self.distance_detected) < 100:
+            if self.color_detected == "Green" and int(self.distance_detected) < 100:
+                logging.info("Taking action to start backward motors")
+                self.my_state = "Backing"
+                send_data(R, "commands", "Motor_Status", "Backward")
+        if self.my_state == "Running" or self.my_state == "Backing":
+            if self.color_detected == "Red" or int(self.distance_detected) < 100:
                 logging.info("Taking actions to stop motors")
                 self.my_state = "Stopped"
                 send_data(R, "commands", "Motor_Status", "Stop")
